@@ -1,19 +1,9 @@
-import os
-from dotenv import load_dotenv
+import langchain_helper as lh
 import speech_recognition as sr
 import pyttsx3
-import google.generativeai as genai
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain import ConversationChain
 
 recognizer = sr.Recognizer()
 engine = pyttsx3.init()
-
-load_dotenv()
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-llm = ChatGoogleGenerativeAI(model="gemini-pro",
-                             temperature=0.3)
-conversation = ConversationChain(llm=llm)
 
 def speak(text):
     engine.say(text)
@@ -29,16 +19,18 @@ while True:
             user_input = recognizer.recognize_google(audio)
             print("You said:", user_input)
 
-            stop_words = ["stop", "exit", "quit"]
+            stop_words = ["stop", "exit", "quit", "thank you"]
             querys = user_input.lower()
             if any(word in querys for word in stop_words):
+                speak("Thank you for reaching!")
                 print("Thank you for reaching!")
                 break
+            
+            chain = lh.get_chain()
+            response_text = chain(user_input)
+            print("Bot response:", response_text['result'])
 
-            response_text = conversation.run(user_input)
-            print("Bot response:", response_text)
-
-            speak(response_text)
+            speak(response_text['result'])
 
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
@@ -47,3 +39,4 @@ while True:
 
     except Exception as e:
         print(f"Error: {e}")
+

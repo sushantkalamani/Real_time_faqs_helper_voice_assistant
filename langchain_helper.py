@@ -50,13 +50,32 @@ def get_chain():
     #     print(f"Result {i + 1}: {result}")
     # ----------------------------------------------------------------
         
-    prompt_template = """Given the following context and a question, generate an answer based on this context only.
-    Answer as if you are in between a conversation build up the answer with respect to complete given question. 
-    If the question asked is out of provided context then say 'I apologize for inconvenience I don't have that information right now would you like to speak to our Senior for this query?'
+    # prompt_template = """Given the following context and a question, generate an answer based on this context only.
+    # Answer as if you are in between a conversation build up the answer with respect to complete given question. Use punctuations like  comma, full stop. 
+    # If the question asked is out of provided context then say 'I apologize for inconvenience I don't have that information right now would you like to speak to our Senior for this query?' 
+
+    # CONTEXT: {context}
+
+    # QUESTION: {question}"""
+
+    prompt_template = """Hey, I need your help with something!
 
     CONTEXT: {context}
 
-    QUESTION: {question}"""
+    QUESTION: {question}
+
+    Can you provide a detailed answer that sounds friendly and engaging? Also, feel free to add some follow-up questions to keep the conversation going. Thanks!
+    """
+
+    # prompt_template = """Imagine you're having a conversation with a friend who is interested in [topic]. They've been following [previous conversation/context] closely. Ask yourself, 'What would I tell them to make them understand this well?' Then, answer the following question for your friend:
+
+    # Question: {question}
+
+    # CONTEXT: {context}
+
+    # I apologize if the answer goes beyond the provided context. If the question is outside this topic, answer with, "I apologize, but that information isn't included in our current conversation. Perhaps we can discuss something else related to [topic]?"
+    # """
+
 
     PROMPT = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
